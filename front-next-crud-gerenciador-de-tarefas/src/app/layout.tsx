@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Gerenciador de Tarefas do Wesley Sieiro Takatsu de Araujo",
     description: "Demonstração de um gerenciador de tarefas utilizando Next.js do Wesley Sieiro Takatsu de Araujo",
-    images: ['/og-image.png'],
+    images: ['https://wesleytakatsu.github.io/Pagina-Apresentacao-Pessoal/media/img/Logo-Takatsu-Projetos.png'],
   }
 };
 
@@ -28,6 +28,7 @@ export default function RootLayout({
       <body
         className={`antialiased`}
       >
+        
         <Header />
 
         {children}

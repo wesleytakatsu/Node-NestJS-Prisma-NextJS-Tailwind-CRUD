@@ -1,8 +1,10 @@
 import { Body, Controller, Get, Post, Put, Delete, Param } from '@nestjs/common';
 // import { AppService } from './app.service';
 import { PrismaService } from './database/prisma.service';
+import { plainToInstance } from 'class-transformer';
 import { CreateUserBody } from './dtos/create-user-body';
 import { CreateTarefaBody } from './dtos/create-tarefa-body';
+import { SelectUserBody } from './dtos/select-user-body';
 
 @Controller()
 export class AppController {
@@ -40,7 +42,41 @@ export class AppController {
         password
       }
     });
-    return user;
+    return plainToInstance(SelectUserBody, user);
+  }
+
+  // listar todos os usuarios
+  @Get('user')
+  async getUsers() {
+    const users = await this.prisma.user.findMany();
+    return users.map(user => plainToInstance(SelectUserBody, user));
+  }
+
+  // listar todos os usuarios de forma paginada
+  @Get('user/page/:page')
+  async getUsersPage(@Param('page') page: number) {
+    const pageSize = 5;
+    const users = await this.prisma.user.findMany({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+    });
+
+    const totalUsers = await this.prisma.user.count();
+    const totalPages = Math.ceil(totalUsers / pageSize);
+    const hasNextPage = page < totalPages;
+    const hasPreviousPage = page > 1;
+    const nextPage = hasNextPage ? page + 1 : null;
+    const previousPage = hasPreviousPage ? page - 1 : null;
+
+    return {
+      users: users.map(user => plainToInstance(SelectUserBody, user)),
+      totalUsers,
+      totalPages,
+      hasNextPage,
+      hasPreviousPage,
+      nextPage,
+      previousPage
+    };
   }
 
   // criar tarefa do usuario
@@ -81,22 +117,132 @@ export class AppController {
     return tasks;
   }
 
-  // listar todas as tarefas
+  // listar todas as tarefas com o usuario
   @Get('tasks')
   async getAllTasks() {
-    const tasks = await this.prisma.tarefa.findMany();
+    const tasks = await this.prisma.tarefa.findMany({
+      include: {
+        user: true
+      }
+    });
+    tasks.forEach(task => {
+      if (task.user) {
+        task.user = plainToInstance(SelectUserBody, task.user);
+      }
+    });
     return tasks;
   }
 
   // listar todas as tarefas por paginação
   @Get('tasks/page/:page')
   async getTasksPage(@Param('page') page: number) {
-    const pageSize = 10;
+    const pageSize = 5;
     const tasks = await this.prisma.tarefa.findMany({
       skip: (page - 1) * pageSize,
-      take: pageSize
+      take: pageSize,
+      include: {
+        user: true
+      }
     });
-    return tasks;
+    tasks.forEach(task => {
+      if (task.user) {
+        task.user = plainToInstance(SelectUserBody, task.user);
+      }
+    });
+    const totalTasks = await this.prisma.tarefa.count();
+    const totalPages = Math.ceil(totalTasks / pageSize);
+    const hasNextPage = page < totalPages;
+    const hasPreviousPage = page > 1;
+    const nextPage = hasNextPage ? page + 1 : null;
+    const previousPage = hasPreviousPage ? page - 1 : null;
+    const tasksWithPagination = {
+      tasks,
+      totalTasks,
+      totalPages,
+      hasNextPage,
+      hasPreviousPage,
+      nextPage,
+      previousPage
+    };
+    return tasksWithPagination;
+  }
+
+  // listar as tarefas do usuario por paginação
+  @Get('tasks/page/:idUser/:page')
+  async getUserTasksPage(
+    @Param('idUser') idUser: string,
+    @Param('page') page: number
+  ) {
+    const pageSize = 5;
+    const tasks = await this.prisma.tarefa.findMany({
+      skip: (page - 1) * pageSize,
+      take: pageSize,
+      where: {
+        userId: idUser
+      },
+      include: {
+        user: true
+      }
+    });
+
+    tasks.forEach(task => {
+      if (task.user) {
+        task.user = plainToInstance(SelectUserBody, task.user);
+      }
+    });
+
+    const totalTasks = await this.prisma.tarefa.count({
+      where: { userId: idUser }
+    });
+    const totalPages = Math.ceil(totalTasks / pageSize);
+    const hasNextPage = page < totalPages;
+    const hasPreviousPage = page > 1;
+    const nextPage = hasNextPage ? page + 1 : null;
+    const previousPage = hasPreviousPage ? page - 1 : null;
+    
+    const tasksWithPagination = {
+      tasks,
+      totalTasks,
+      totalPages,
+      hasNextPage,
+      hasPreviousPage,
+      nextPage,
+      previousPage
+    };
+    return tasksWithPagination;
+  }
+ 
+  // user login cria um jwt
+  @Post('login')
+  async login(@Body() body: { username: string, password: string }) {
+    const { username, password } = body;
+    const user = await this.prisma.user.findUnique({
+      where: {
+        username
+      }
+    });
+    if (!user) {
+      return {
+        message: 'Usuario não encontrado',
+        status: 404
+      }
+    }
+    if (user.password !== password) {
+      return {
+        message: 'Senha incorreta',
+        status: 401
+      }
+    }
+    const token = "OK";
+    const userId = user.id;
+    const userName = user.name;
+    return {
+      message: 'Login realizado com sucesso',
+      status: 201,
+      token,
+      userId,
+      userName
+    }
   }
 
   // mostrar tarefa
@@ -123,6 +269,7 @@ export class AppController {
     });
     return task;
   }
+
   // deletar tarefa
   @Delete('tasks/:taskId')
   async deleteTask(@Param('taskId') taskId: string) {

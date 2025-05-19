@@ -25,7 +25,6 @@
 
 import { useEffect, useState } from 'react';
 import { Pagination } from '@/components/pagination';
-import Modal from "@/components/Modal";
 
 interface Task {
   id: string;
@@ -53,8 +52,6 @@ interface TarefasResponse {
 export default function Tarefas() {
   const [tarefas, setTarefas] = useState<TarefasResponse | null>(null);
   const [page, setPage] = useState(1);
-  const [isModalOpen, setModalOpen] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   useEffect(() => {
     // const fetchTarefas = async () => {
@@ -68,9 +65,16 @@ export default function Tarefas() {
     //   }
     // };
     const fetchTarefas = async () => {
+
+      const userId = localStorage.getItem('userId');
+      if (!userId) {
+        window.location.href = '/usuarios/login';
+        return;
+      }
+
       try {
         console.log('Buscando tarefas da página:', page, 'em 127.0.0.1');
-        let res = await fetch(`http://127.0.0.1:3000/tasks/page/${page}`);
+        let res = await fetch(`http://127.0.0.1:3000/tasks/page/${userId}/${page}`);
         if (!res.ok) {
           throw new Error(`Erro status no 127.0.0.1: ${res.status}`);
         }
@@ -94,40 +98,10 @@ export default function Tarefas() {
     fetchTarefas();
   }, [page]);
 
-  const handleDelete = async (taskId: string) => {
-    if (!confirm('Deseja excluir a tarefa?')) return;
-    try {
-      let res = await fetch(`http://127.0.0.1:3000/tasks/${taskId}`, {
-        method: 'DELETE',
-      });
-      if (!res.ok) {
-        console.warn(`Falha ao excluir em 127.0.0.1, tentando fallback. Status: ${res.status}`);
-        res = await fetch(`http://192.168.1.30:3000/tasks/${taskId}`, {
-          method: 'DELETE',
-        });
-        if (!res.ok) {
-          throw new Error(`Erro ao excluir. Status: ${res.status}`);
-        }
-      }
-      // Atualiza a lista de tarefas, removendo a tarefa excluída
-      setTarefas(prev => {
-        if (!prev) return prev;
-        return {
-          ...prev,
-          tasks: prev.tasks.filter(task => task.id !== taskId),
-          totalTasks: prev.totalTasks - 1,
-        };
-      });
-      console.log('Tarefa excluída com sucesso.');
-    } catch (error) {
-      console.error('Erro ao excluir a tarefa:', error);
-    }
-  };
-
   return (
     <>
       <div className="flex justify-center items-center h-16 bg-gray-100 dark:bg-gray-800">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Todas as Tarefas</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Minhas Tarefas</h1>
       </div>
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
@@ -149,28 +123,7 @@ export default function Tarefas() {
                 <td className="px-6 py-4">{task.completed ? 'Concluída' : 'Pendente'}</td>
                 <td className="px-6 py-4">{new Date(task.createdAt).toLocaleDateString()}</td>
                 <td className="px-6 py-4">
-                  <a
-                    href="#"
-                    className="text-blue-600 hover:underline"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setSelectedTask(task);
-                      setModalOpen(true);
-                    }}
-                  >
-                    Visualizar
-                  </a>
-                  <a
-                    href="#"
-                    className="text-blue-600 hover:underline ml-4"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleDelete(task.id);
-                    }}
-                  >
-                    Excluir
-                  </a>
-                  <a href="#" className="text-blue-600 hover:underline ml-4">Editar</a>
+                  <a href="#" className="text-blue-600 hover:underline">Editar</a>
                 </td>
               </tr>
             ))}
@@ -189,19 +142,17 @@ export default function Tarefas() {
           </div>
         )}
       </div>
-
-      {/* Renderização do modal */}
-      {selectedTask && (
-        <Modal isOpen={isModalOpen} onClose={() => { setModalOpen(false); setSelectedTask(null); }} title="Detalhes da Tarefa">
-          <div className="space-y-2">
-            <p><strong>Título:</strong> {selectedTask.title}</p>
-            <p><strong>Descrição:</strong> {selectedTask.description}</p>
-            <p><strong>Status:</strong> {selectedTask.completed ? 'Concluída' : 'Pendente'}</p>
-            <p><strong>Criado em:</strong> {new Date(selectedTask.createdAt).toLocaleDateString()}</p>
-            <p><strong>Usuário:</strong> {selectedTask.user.name}</p>
-          </div>
-        </Modal>
-      )}
     </>
   );
 }
+
+
+// <div className="flex justify-center mt-4">
+//   <Pagination
+//     currentPage={page}
+//     totalPages={tarefas.totalPages}
+//     hasNextPage={tarefas.hasNextPage}
+//     hasPreviousPage={tarefas.hasPreviousPage}
+//     onPageChange={(newPage: number) => setPage(newPage)}
+//   />
+// </div>
