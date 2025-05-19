@@ -54,7 +54,7 @@ export default function LoginUsuario() {
             }, 3000);
         } else {
             const errorResponse = await res.json();
-            toast.error(`Ocorreu um erro: ${errorResponse.message}`);
+            toast.error(`${errorResponse.message}`);
         }
     }
 

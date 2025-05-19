@@ -136,6 +136,7 @@ export default function Tarefas() {
             <tr>
               <th className="px-6 py-3">Título</th>
               <th className="px-6 py-3">Descrição</th>
+              <th className="px-6 py-3">Usuário</th>
               <th className="px-6 py-3">Status</th>
               <th className="px-6 py-3">Criado em</th>
               <th className="px-6 py-3">Ações</th>
@@ -146,6 +147,7 @@ export default function Tarefas() {
               <tr key={task.id} className="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-900 dark:even:bg-gray-800 border-b dark:border-gray-700">
                 <td className="px-6 py-4">{task.title}</td>
                 <td className="px-6 py-4">{task.description}</td>
+                <td className="px-6 py-4">{task.user.name}</td>
                 <td className="px-6 py-4">{task.completed ? 'Concluída' : 'Pendente'}</td>
                 <td className="px-6 py-4">{new Date(task.createdAt).toLocaleDateString()}</td>
                 <td className="px-6 py-4">
@@ -160,17 +162,6 @@ export default function Tarefas() {
                   >
                     Visualizar
                   </a>
-                  <a
-                    href="#"
-                    className="text-blue-600 hover:underline ml-4"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleDelete(task.id);
-                    }}
-                  >
-                    Excluir
-                  </a>
-                  <a href="#" className="text-blue-600 hover:underline ml-4">Editar</a>
                 </td>
               </tr>
             ))}
@@ -192,7 +183,7 @@ export default function Tarefas() {
 
       {/* Renderização do modal */}
       {selectedTask && (
-        <Modal isOpen={isModalOpen} onClose={() => { setModalOpen(false); setSelectedTask(null); }} title="Detalhes da Tarefa">
+        <Modal isOpen={isModalOpen} onClose={() => { setModalOpen(false); setSelectedTask(null); }} title="Detalhes da Tarefa" userId={selectedTask.user.id} taskId={selectedTask.id} concluido={selectedTask.completed}>
           <div className="space-y-2">
             <p><strong>Título:</strong> {selectedTask.title}</p>
             <p><strong>Descrição:</strong> {selectedTask.description}</p>

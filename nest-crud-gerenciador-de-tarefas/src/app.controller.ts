@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Put, Delete, Param } from '@nestjs/common';
+import { Body, Controller, Get, Post, Put, Delete, Param, HttpException, HttpStatus } from '@nestjs/common';
 // import { AppService } from './app.service';
 import { PrismaService } from './database/prisma.service';
 import { plainToInstance } from 'class-transformer';
@@ -90,10 +90,9 @@ export class AppController {
       }
     });
     if (!user) {
-      return {
-        message: 'Usuario não encontrado',
-        status: 404
-      }
+      console.log('Userid:', userId);
+      console.log('Usuario não encontrado ao criar tarefa');
+      throw new HttpException('Usuario não encontrado', HttpStatus.NOT_FOUND);
     }
 
     const task = await this.prisma.tarefa.create({
@@ -103,6 +102,8 @@ export class AppController {
         userId
       }
     });
+    console.log('Tarefa criada com sucesso');
+    console.log('Tarefa:', task);
     return task;
   }
 
@@ -212,7 +213,7 @@ export class AppController {
     return tasksWithPagination;
   }
  
-  // user login cria um jwt
+  // user login
   @Post('login')
   async login(@Body() body: { username: string, password: string }) {
     const { username, password } = body;
@@ -222,16 +223,10 @@ export class AppController {
       }
     });
     if (!user) {
-      return {
-        message: 'Usuario não encontrado',
-        status: 404
-      }
+      throw new HttpException('Usuario não encontrado', HttpStatus.NOT_FOUND);
     }
     if (user.password !== password) {
-      return {
-        message: 'Senha incorreta',
-        status: 401
-      }
+      throw new HttpException('Senha incorreta', HttpStatus.UNAUTHORIZED);
     }
     const token = "OK";
     const userId = user.id;
@@ -267,6 +262,13 @@ export class AppController {
         completed: true
       }
     });
+    if (!task) {
+      console.log('Tarefa não encontrada ao completar');
+      console.log('TaskId:', body.taskId);
+      throw new HttpException('Tarefa não encontrada', HttpStatus.NOT_FOUND);
+    }
+    console.log('Tarefa completada com sucesso');
+    console.log('Tarefa:', task);
     return task;
   }
 

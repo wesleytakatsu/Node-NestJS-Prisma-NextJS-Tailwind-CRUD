@@ -102,7 +102,7 @@ export default function Usuarios() {
   return (
     <>
       <div className="flex justify-center items-center h-16 bg-gray-100 dark:bg-gray-800">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Users</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Lista de Usuários</h1>
       </div>
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">

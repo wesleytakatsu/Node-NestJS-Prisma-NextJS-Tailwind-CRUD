@@ -21,6 +21,11 @@ export function Header() {
         <header className="bg-gray-800 text-white">
             <div className="max-w-7xl mx-auto flex items-center justify-between p-4">
                 <h1 className="text-2xl font-bold">Gerenciador de Tarefas</h1>
+                {isAuthenticated && (
+                    <div className="hidden md:block">
+                        <span className="text-sm">Bem-vindo, {localStorage.getItem('userName')}</span>
+                    </div>
+                )}
 
                 {/* Hamburger button - shown only on mobile */}
                 <button
@@ -64,16 +69,20 @@ export function Header() {
                                 Home
                             </Link>
                         </li>
-                        <li>
-                            <Link href="/usuarios/cadastrar" className={`block py-2 hover:text-gray-400 ${isActive('/')}`}>
-                                Cadastrar
-                            </Link>
-                        </li>
-                        <li>
-                            <Link href="/usuarios/login" className={`block py-2 hover:text-gray-400 ${isActive('/')}`}>
-                                Login
-                            </Link>
-                        </li>
+                        {!isAuthenticated && (
+                            <li>
+                                <Link href="/usuarios/cadastrar" className={`block py-2 hover:text-gray-400 ${isActive('/')}`}>
+                                    Cadastrar
+                                </Link>
+                            </li>
+                        )}
+                        {!isAuthenticated && (
+                            <li>
+                                <Link href="/usuarios/login" className={`block py-2 hover:text-gray-400 ${isActive('/')}`}>
+                                    Login
+                                </Link>
+                            </li>
+                        )}
                         <li>
                             <Link href="/usuarios" className={`block py-2 hover:text-gray-400 ${isActive('/')}`}>
                                 Usuários
