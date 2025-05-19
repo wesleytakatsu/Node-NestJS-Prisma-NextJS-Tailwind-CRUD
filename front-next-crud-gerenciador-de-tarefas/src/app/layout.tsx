@@ -3,6 +3,7 @@ import "./globals.css";
 import { Header } from '../components/header';
 
 import { Metadata } from "next";
+import Footer from "@/components/footer";
 
 export const metadata: Metadata = {
   title: "Gerenciador de Tarefas do Wesley Sieiro Takatsu de Araujo",
@@ -32,6 +33,8 @@ export default function RootLayout({
         <Header />
 
         {children}
+
+        <Footer />
       </body>
     </html>
   );
