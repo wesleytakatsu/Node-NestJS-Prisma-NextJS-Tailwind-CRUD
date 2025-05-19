@@ -107,8 +107,8 @@ export class AppController {
     return task;
   }
 
-  // listar tarefas do usuario
-  @Get('tasks/:userId')
+  // listar tarefas do usuario sem paginacao
+  @Get('tasks/user/:userId')
   async getTasks(@Body() body: { userId: string }) {
     const tasks = await this.prisma.tarefa.findMany({
       where: {

@@ -177,7 +177,7 @@ export default function Tarefas() {
                   >
                     Excluir
                   </a>
-                  <a href="#" className="text-blue-600 hover:underline ml-4">Editar</a>
+                  <a href={`/tarefas/editar/${task.id}`} className="text-blue-600 hover:underline ml-4">Editar</a>
                 </td>
               </tr>
             ))}
