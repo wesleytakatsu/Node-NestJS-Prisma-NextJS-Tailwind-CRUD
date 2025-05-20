@@ -29,7 +29,7 @@ Frontend:
 
 ## 🚀 Instalação
 
-- Certifique-se de ter o **Docker** e o **Docker Compose** instalados na sua máquina **ou** o **Node.js atualizado** (foi utilizada a versão `v22` durante o desenvolvimento).
+- Certifique-se de ter o **Docker** e o **Docker Compose** instalados na sua máquina **ou** o **Node.js atualizado** (foi utilizada a versão `22` durante o desenvolvimento).
 - Para rodar com Docker:
   - Execute: `docker-compose up --build` (primeira vez)
   - Para rodar novamente: `docker-compose up -d`
@@ -40,9 +40,9 @@ Frontend:
 
 ## 🔍 Observações
 
-> ✅ Swagger foi implementado e está disponível em: `http://127.0.0.1:3000/api`
-> ✅ Pode rodar em Docker ou diretamente cada serviço, mas inicie o servidor NestJS primeiro
-> ✅ As portas utilizadas são **3000** para o backend e **3001** para o frontend
+> ✅ Swagger foi implementado e está disponível em: `http://127.0.0.1:3000/api`  
+> ✅ Pode rodar em Docker ou diretamente cada serviço, mas inicie o servidor NestJS primeiro  
+> ✅ As portas utilizadas são **3000** para o backend e **3001** para o frontend  
 
 ---
 
