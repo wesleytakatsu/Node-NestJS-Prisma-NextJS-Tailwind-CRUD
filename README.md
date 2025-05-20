@@ -1,5 +1,4 @@
-# Node-NestJS-Prisma-NextJS-Tailwind-CRUD
-Simples CRUD com front e back separados usando tecnologias modernas
+# Projeto simples de tarefas de usuário em Node, NestJS e NextJS usando Prisma ORM, Tailwind CSS e outros.
 
 ![Takatsu's Projects](https://wesleytakatsu.github.io/Pagina-Apresentacao-Pessoal/media/img/Logo-Takatsu-Projetos.png)
 
@@ -24,8 +23,9 @@ Frontend:
 
 
 ## Observações do projeto
-- Utiliza DTOs para controlar a criação e o select
-- Ao retornar informações do usuário é suprimido o password
+- Testei todas as rotas com o Insomnia e com o Swagger, com sucesso tanto rodando direto, quanto pelo Docker
+- Usei os modelos do formulário e a tabela de listagem estilizados pegos na internet e fiz alterações para adaptar ao projeto e acelerar o processo de desenvolvimento, já que o estilo não era o objetivo principal, mas ajuda no uso do sistema.
+- Todas as funções, métodos, classes, rotas, controllers e demais componentes e etc foram criadas do zero por mim, sem reaproveitamento de código externo.
 
 ## 🚀 Instalação
 
