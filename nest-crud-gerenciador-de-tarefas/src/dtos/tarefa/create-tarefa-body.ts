@@ -1,4 +1,4 @@
-import { IsNotEmpty, Length } from 'class-validator';
+import { IsNotEmpty, Length, IsBoolean, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateTarefaBody {
@@ -24,6 +24,8 @@ export class CreateTarefaBody {
         description: 'Indica se a tarefa já foi concluída',
         required: false,
     })
+    @IsOptional()
+    @IsBoolean({ message: 'completed deve ser do tipo booleano' })
     completed?: boolean;
 
     @ApiProperty({
