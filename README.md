@@ -28,9 +28,9 @@ Frontend:
 - Todas as funções, métodos, classes, rotas, controllers e demais componentes e etc foram criadas do zero por mim, sem reaproveitamento de código externo.
 
 ## 🚀 Instalação
+- Certifique-se de ter o **Docker** e o **Docker Compose** instalados na sua máquina **ou** o **Node.js atualizado** (foi utilizada a versão `22` durante o desenvolvimento).
 
 ### Docker:
-  - Certifique-se de ter o **Docker** e o **Docker Compose** instalados na sua máquina **ou** o **Node.js atualizado** (foi utilizada a versão `22` durante o desenvolvimento).
   - Para rodar com Docker:
   - Execute: `docker-compose up --build` (primeira vez)  
   - Para rodar novamente: `docker-compose up -d`  
