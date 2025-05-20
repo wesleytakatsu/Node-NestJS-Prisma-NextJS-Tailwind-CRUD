@@ -1,6 +1,5 @@
 export default function Home() {
   const routes = [
-    { route: "GET '/'", description: "Retorna uma mensagem de teste indicando que a API está funcionando." },
     { route: "POST 'user'", description: "Cria um novo usuário se o mesmo não existir." },
     { route: "GET 'user'", description: "Lista todos os usuários cadastrados." },
     { route: "GET 'user/page/:page'", description: "Lista os usuários de forma paginada." },
@@ -22,6 +21,13 @@ export default function Home() {
 
         <section>
           <h1 className="text-4xl font-bold mb-4 text-blue-600 dark:text-blue-400">Recursos Adicionados</h1>
+        </section>
+        
+        <section className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
+          <h2 className="text-2xl font-semibold mb-4 border-b pb-2">Observações</h2>
+          <p className="text-gray-600 dark:text-gray-300">
+            Swagger foi implementado e usa a rota <span className="font-bold">127.0.0.1:3000/api</span>.
+          </p>
         </section>
 
         <section className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
@@ -105,12 +111,14 @@ export default function Home() {
             </li>
             <li>Prisma ORM</li>
             <li>SQLite</li>
-            <li>Class-validator</li>
+            <li>Validação de campos com Class-validator</li>
+            <li>Uso de Docker para automatização de construção dos servidores</li>
+            <li>Controllers separados</li>
           </ul>
         </section>
 
         <section className="bg-white dark:bg-gray-800 rounded-2xl shadow-md p-6">
-          <h2 className="text-2xl font-semibold mb-4 border-b pb-2">O que eu sei implementar mas fui limitado pelo tempo</h2>
+          <h2 className="text-2xl font-semibold mb-4 border-b pb-2">O que pode ser implementado depois</h2>
           <ul className="list-disc list-inside space-y-2">
             <li>
               <span className="font-semibold">Autenticação</span>
@@ -132,9 +140,6 @@ export default function Home() {
               <span className="font-semibold">Servidor</span>
               <ul className="list-disc list-inside ml-6 space-y-1">
                 <li>Uso de Middlewares para verificação de autenticação</li>
-                <li>Validação de campos de forma mais precisa</li>
-                <li>Uso de Docker para automatização de construção dos servidores</li>
-                <li>Controllers separados</li>
                 <li>Uso de repository</li>
                 <li>Consumo de API externa, como para consulta de CEP e etc</li>
                 <li>Criptografia de senha ao armazenar no banco</li>
@@ -142,7 +147,7 @@ export default function Home() {
                 
               </ul>
             </li>
-            <li>Entre outros recursos que necessitam de mais tempo para implementação</li>
+            <li>Entre outros recursos interessantes que podem deixar o projeto mais robusto e útil para estudos, consultas e testes de demais usuários</li>
           </ul>
         </section>
 
