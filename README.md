@@ -31,7 +31,6 @@ Frontend:
 - Certifique-se de ter o **Docker** e o **Docker Compose** instalados na sua máquina **ou** o **Node.js atualizado** (foi utilizada a versão `22` durante o desenvolvimento).
 
 ### Docker:
-  - Para rodar com Docker:
   - Execute: `docker-compose up --build` (primeira vez)  
   - Para rodar novamente: `docker-compose up -d`  
   - Para desligar: `docker-compose down` ou utilize o **Docker Desktop** se estiver instalado.  
