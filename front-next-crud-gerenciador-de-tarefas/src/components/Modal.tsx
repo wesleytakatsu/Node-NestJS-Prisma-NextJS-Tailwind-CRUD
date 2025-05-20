@@ -16,38 +16,33 @@ export default function Modal({ isOpen, onClose, title, userId, taskId, concluid
     const token = localStorage.getItem("token");
     const userIdLogado = localStorage.getItem("userId");
 
+    const principalUrl = process.env.NEXT_PUBLIC_LOCAL_HOST;
+    const alternativeUrl = process.env.NEXT_PUBLIC_ALTERNATIVE_URL;
+
     if (!isOpen) return null;
 
     const handleComplete = async (taskId: string) => {
         if (!confirm('Deseja marcar a tarefa como concluída?')) return;
         try {
-            let res;
-            try {
-                res = await fetch(`http://127.0.0.1:3000/tasks/complete`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ taskId: taskId }),
-                });
-            } catch (error) {
-                console.warn('Falha na requisição em 127.0.0.1, tentando fallback.');
-            }
-            
-            if (!res) {
-                res = await fetch(`http://192.168.1.30:3000/tasks/complete`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ taskId: taskId }),
-                });
-            }
-            
+            let res = await fetch(`http://${principalUrl}:3000/tasks/complete`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ taskId: taskId }),
+            });
             if (!res.ok) {
-                throw new Error(`Erro ao marcar como concluída. Status: ${res.status}`);
+                res = await fetch(`http://${alternativeUrl}:3000/tasks/complete`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ taskId: taskId }),
+                });
+                if (!res.ok) {
+                    throw new Error(`Erro ao marcar como concluída. Status: ${res.status}`);
+                }
             }
-            console.log('Tarefa concluída com sucesso.');
             const responseData = await res.json();
             toast.success(responseData.message);
             setTimeout(() => {
@@ -56,7 +51,6 @@ export default function Modal({ isOpen, onClose, title, userId, taskId, concluid
             , 3000);
         
         } catch (error) {
-            console.error('Erro ao marcar a tarefa como concluída:', error);
             toast.error('Ocorreu um erro ao marcar a tarefa como concluída.');
         }
     };

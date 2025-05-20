@@ -1,12 +1,9 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 export default function LoginUsuario() {
-    const router = useRouter();
-
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
@@ -15,35 +12,35 @@ export default function LoginUsuario() {
             password: formData.get("password")
         };
 
+        const principalUrl = process.env.NEXT_PUBLIC_LOCAL_HOST;
+        const alternativeUrl = process.env.NEXT_PUBLIC_ALTERNATIVE_URL;
+
         let res;
         try {
-            res = await fetch("http://127.0.0.1:3000/login", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify(data)
-            });
-        } catch (error) {
-            // Se não houver resposta de 127.0.0.1, tenta no 192.168.1.30
-            try {
-            res = await fetch("http://192.168.1.30:3000/login", {
+            res = await fetch(`http://${principalUrl}:3000/user/login`, {
                 method: "POST",
                 headers: {
-                "Content-Type": "application/json"
+                    "Content-Type": "application/json"
                 },
                 body: JSON.stringify(data)
             });
+        } catch (error) {
+            try {
+                res = await fetch(`http://${alternativeUrl}:3000/user/login`, {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(data)
+                });
             } catch (error2) {
-            console.error("Erro ao tentar logar usuário em ambos os endereços:", error2);
-            toast.error("Ocorreu um erro na requisição.");
-            return;
+                toast.error("Ocorreu um erro na requisição.");
+                return;
             }
         }
 
-        console.log("Resposta do servidor:", res.status);
         if (res.status === 201) {
-            
+
             const responseData = await res.json();
             toast.success(responseData.message);
             localStorage.setItem("token", responseData.token);

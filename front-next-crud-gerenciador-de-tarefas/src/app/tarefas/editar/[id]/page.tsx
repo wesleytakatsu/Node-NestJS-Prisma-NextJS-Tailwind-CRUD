@@ -12,19 +12,21 @@ export default function EditarTarefa() {
     const [title, setTitle] = useState("");
     const [description, setDescription] = useState("");
 
+    const principalUrl = process.env.NEXT_PUBLIC_LOCAL_HOST;
+    const alternativeUrl = process.env.NEXT_PUBLIC_ALTERNATIVE_URL;
+
     useEffect(() => {
         if (!id) return;
         async function fetchTask() {
             let res;
             try {
-                res = await fetch(`http://127.0.0.1:3000/tasks/${id}`);
+                res = await fetch(`http://${principalUrl}:3000/tasks/${id}`);
                 if (!res.ok) throw new Error("Erro na requisição primária");
             } catch (error) {
                 try {
-                    res = await fetch(`http://192.168.1.30:3000/tasks/${id}`);
+                    res = await fetch(`http://${alternativeUrl}:3000/tasks/${id}`);
                     if (!res.ok) throw new Error("Erro na requisição secundária");
                 } catch (error2) {
-                    console.error("Erro ao buscar a tarefa em ambos os endereços:", error2);
                     toast.error("Ocorreu um erro ao buscar a tarefa.");
                     return;
                 }
@@ -60,11 +62,10 @@ export default function EditarTarefa() {
             completed: formData.get("completed") === "on" ? true : false,
             userId: userId
         };
-        console.log("Dados a serem enviados:", data);
 
         let res;
         try {
-            res = await fetch(`http://127.0.0.1:3000/tasks/${id}`, {
+            res = await fetch(`http://${principalUrl}:3000/tasks/${id}`, {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json"
@@ -73,7 +74,7 @@ export default function EditarTarefa() {
             });
         } catch (error) {
             try {
-                res = await fetch(`http://127.0.0.1:3000/tasks/${id}`, {
+                res = await fetch(`http://${alternativeUrl}:3000/tasks/${id}`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json"
@@ -81,13 +82,11 @@ export default function EditarTarefa() {
                     body: JSON.stringify(data)
                 });
             } catch (error2) {
-                console.error("Erro ao cadastrar a tarefa em ambos os endereços:", error2);
                 toast.error("Ocorreu um erro na requisição.");
                 return;
             }
         }
 
-        console.log("Resposta do servidor:", res.status);
         if (res.status === 200) {
             toast.success("Atualizado com sucesso!");
             setTimeout(() => {

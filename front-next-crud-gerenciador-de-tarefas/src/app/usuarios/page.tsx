@@ -1,38 +1,38 @@
 /*
 {
-	"users": [
-		{
-			"id": "cmaue8jwv0000wsyj7pakmii2",
-			"name": "John Doe",
-			"username": "johndoe"
-		},
-		{
-			"id": "cmaueocw80000ws97caopdg4e",
-			"name": "Teste do Wesley",
-			"username": "teste"
-		},
-		{
-			"id": "cmaugqdt10000wsrqhtrgda63",
-			"name": "Teste do Wesley 2",
-			"username": "teste 2"
-		},
-		{
-			"id": "cmaumlmzb0000ws65xnrqqrei",
-			"name": "Teste do Wesley 3",
-			"username": "teste 3"
-		},
-		{
-			"id": "cmauro8if0000wsj1y7p92pjv",
-			"name": "teste4",
-			"username": "teste4"
-		}
-	],
-	"totalUsers": 6,
-	"totalPages": 2,
-	"hasNextPage": true,
-	"hasPreviousPage": false,
-	"nextPage": "11",
-	"previousPage": null
+  "users": [
+    {
+      "id": "cmaue8jwv0000wsyj7pakmii2",
+      "name": "John Doe",
+      "username": "johndoe"
+    },
+    {
+      "id": "cmaueocw80000ws97caopdg4e",
+      "name": "Teste do Wesley",
+      "username": "teste"
+    },
+    {
+      "id": "cmaugqdt10000wsrqhtrgda63",
+      "name": "Teste do Wesley 2",
+      "username": "teste 2"
+    },
+    {
+      "id": "cmaumlmzb0000ws65xnrqqrei",
+      "name": "Teste do Wesley 3",
+      "username": "teste 3"
+    },
+    {
+      "id": "cmauro8if0000wsj1y7p92pjv",
+      "name": "teste4",
+      "username": "teste4"
+    }
+  ],
+  "totalUsers": 6,
+  "totalPages": 2,
+  "hasNextPage": true,
+  "hasPreviousPage": false,
+  "nextPage": "11",
+  "previousPage": null
 }
 */
 
@@ -61,37 +61,27 @@ export default function Usuarios() {
   const [users, setUsers] = useState<UsersResponse | null>(null);
   const [page, setPage] = useState(1);
 
+  const principalUrl = process.env.NEXT_PUBLIC_LOCAL_HOST;
+  const alternativeUrl = process.env.NEXT_PUBLIC_ALTERNATIVE_URL;
+
   useEffect(() => {
-    // const fetchUsers = async () => {
-    //   try {
-    //     console.log('Buscando usuários da página:', page);
-    //     const res = await fetch(`http://127.0.0.1:3000/tasks/page/${page}`);
-    //     const data: UsersResponse = await res.json();
-    //     setUsers(data);
-    //   } catch (err) {
-    //     console.error('Erro ao buscar usuários:', err);
-    //   }
-    // };
     const fetchUsers = async () => {
       try {
-        console.log('Buscando usuários da página:', page, 'em 127.0.0.1');
-        let res = await fetch(`http://127.0.0.1:3000/user/page/${page}`);
+        let res = await fetch(`http://${principalUrl}:3000/user/page/${page}`);
         if (!res.ok) {
-          throw new Error(`Erro status no 127.0.0.1: ${res.status}`);
+          throw new Error(`Erro status: ${res.status}`);
         }
         const data: UsersResponse = await res.json();
         setUsers(data);
       } catch (err) {
-        console.error('Erro ao buscar usuários em 127.0.0.1. Tentando 192.168.1.30:', err);
         try {
-          let res = await fetch(`http://192.168.1.30:3000/user/page/${page}`);
+          let res = await fetch(`http://${alternativeUrl}:3000/user/page/${page}`);
           if (!res.ok) {
-            throw new Error(`Erro status no 192.168.1.30: ${res.status}`);
+            throw new Error(`Erro status: ${res.status}`);
           }
           const data: UsersResponse = await res.json();
           setUsers(data);
         } catch (error) {
-          console.error('Erro ao buscar usuários em ambas as URLs:', error);
         }
       }
     };
@@ -112,7 +102,6 @@ export default function Usuarios() {
               <th className="px-6 py-3">ID</th>
               <th className="px-6 py-3">Nome</th>
               <th className="px-6 py-3">UserName</th>
-              <th className="px-6 py-3">Ações</th>
             </tr>
           </thead>
           <tbody>
@@ -121,9 +110,6 @@ export default function Usuarios() {
                 <td className="px-6 py-4">{user.id}</td>
                 <td className="px-6 py-4">{user.name}</td>
                 <td className="px-6 py-4">{user.username}</td>
-                <td className="px-6 py-4">
-                  <a href="#" className="text-blue-600 hover:underline">Editar</a>
-                </td>
               </tr>
             ))}
           </tbody>

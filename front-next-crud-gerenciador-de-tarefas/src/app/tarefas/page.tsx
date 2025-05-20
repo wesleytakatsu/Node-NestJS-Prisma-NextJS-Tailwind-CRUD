@@ -56,37 +56,27 @@ export default function Tarefas() {
   const [isModalOpen, setModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
+  const principalUrl = process.env.NEXT_PUBLIC_LOCAL_HOST;
+  const alternativeUrl = process.env.NEXT_PUBLIC_ALTERNATIVE_URL;
+
   useEffect(() => {
-    // const fetchTarefas = async () => {
-    //   try {
-    //     console.log('Buscando tarefas da página:', page);
-    //     const res = await fetch(`http://127.0.0.1:3000/tasks/page/${page}`);
-    //     const data: TarefasResponse = await res.json();
-    //     setTarefas(data);
-    //   } catch (err) {
-    //     console.error('Erro ao buscar tarefas:', err);
-    //   }
-    // };
     const fetchTarefas = async () => {
       try {
-        console.log('Buscando tarefas da página:', page, 'em 127.0.0.1');
-        let res = await fetch(`http://127.0.0.1:3000/tasks/page/${page}`);
+        let res = await fetch(`http://${principalUrl}:3000/tasks/page/${page}`);
         if (!res.ok) {
-          throw new Error(`Erro status no 127.0.0.1: ${res.status}`);
+          throw new Error(`Erro status na URL docker: ${res.status}`);
         }
         const data: TarefasResponse = await res.json();
         setTarefas(data);
       } catch (err) {
-        console.error('Erro ao buscar tarefas em 127.0.0.1. Tentando 192.168.1.30:', err);
         try {
-          let res = await fetch(`http://192.168.1.30:3000/tasks/page/${page}`);
+          let res = await fetch(`http://${alternativeUrl}:3000/tasks/page/${page}`);
           if (!res.ok) {
-            throw new Error(`Erro status no 192.168.1.30: ${res.status}`);
+            throw new Error(`Erro status na URL alternativa: ${res.status}`);
           }
           const data: TarefasResponse = await res.json();
           setTarefas(data);
         } catch (error) {
-          console.error('Erro ao buscar tarefas em ambas as URLs:', error);
         }
       }
     };
@@ -97,12 +87,11 @@ export default function Tarefas() {
   const handleDelete = async (taskId: string) => {
     if (!confirm('Deseja excluir a tarefa?')) return;
     try {
-      let res = await fetch(`http://127.0.0.1:3000/tasks/${taskId}`, {
+      let res = await fetch(`http://${principalUrl}:3000/tasks/${taskId}`, {
         method: 'DELETE',
       });
       if (!res.ok) {
-        console.warn(`Falha ao excluir em 127.0.0.1, tentando fallback. Status: ${res.status}`);
-        res = await fetch(`http://192.168.1.30:3000/tasks/${taskId}`, {
+        res = await fetch(`http://${alternativeUrl}:3000/tasks/${taskId}`, {
           method: 'DELETE',
         });
         if (!res.ok) {
@@ -118,9 +107,7 @@ export default function Tarefas() {
           totalTasks: prev.totalTasks - 1,
         };
       });
-      console.log('Tarefa excluída com sucesso.');
     } catch (error) {
-      console.error('Erro ao excluir a tarefa:', error);
     }
   };
 
@@ -129,6 +116,8 @@ export default function Tarefas() {
       <div className="flex justify-center items-center h-16 bg-gray-100 dark:bg-gray-800">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Todas as Tarefas</h1>
       </div>
+
+    
 
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">

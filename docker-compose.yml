@@ -1,0 +1,25 @@
+services:
+  frontend:
+    container_name: frontend-gerenciador-tarefas
+    build:
+      context: ./front-next-crud-gerenciador-de-tarefas
+    ports:
+      - "3001:3000"
+    depends_on:
+      - backend
+    environment:
+      - NODE_ENV=development
+
+  backend:
+    container_name: backend-gerenciador-tarefas
+    build:
+      context: ./nest-crud-gerenciador-de-tarefas
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./nest-crud-gerenciador-de-tarefas:/app
+      - /app/node_modules
+      - /app/dist
+    environment:
+      - NODE_ENV=development
+
