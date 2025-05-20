@@ -46,7 +46,9 @@ Frontend:
   
   - Na pasta do NextJS (Frontend):  
   `npm install`  
-  `npm run dev`  
+  `npm run dev`
+
+Ou simplesmente execute o script 'iniciar_os_projetos_sem_docker.sh'
 
 ### Caso queira mudar entre o docker e os serviços individuais rode o script `sh mudar-do-container-para-local-e-vice-versa.sh` que deve pedir a senha sudo para deletar as pastas 'dist' e 'node_modules' que ficam com permissões do Docker e vice versa, também remove os containers construídos antes de iniciar de forma diferente.  
   
