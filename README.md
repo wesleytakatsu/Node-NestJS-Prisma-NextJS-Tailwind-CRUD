@@ -29,12 +29,29 @@ Frontend:
 
 ## 🚀 Instalação
 
-- Certifique-se de ter o **Docker** e o **Docker Compose** instalados na sua máquina **ou** o **Node.js atualizado** (foi utilizada a versão `22` durante o desenvolvimento).
-- Para rodar com Docker:
-  - Execute: `docker-compose up --build` (primeira vez)
-  - Para rodar novamente: `docker-compose up -d`
-  - Para desligar: `docker-compose down` ou utilize o **Docker Desktop** se estiver instalado.
-  - Para rodar os serviços separadamente: NestJS `npm run start:dev` e o NextJS `npm run dev`, cada comando em seu respectivo diretório.
+### Docker:
+  - Certifique-se de ter o **Docker** e o **Docker Compose** instalados na sua máquina **ou** o **Node.js atualizado** (foi utilizada a versão `22` durante o desenvolvimento).
+  - Para rodar com Docker:
+  - Execute: `docker-compose up --build` (primeira vez)  
+  - Para rodar novamente: `docker-compose up -d`  
+  - Para desligar: `docker-compose down` ou utilize o **Docker Desktop** se estiver instalado.  
+  
+
+### Serviços individuais:  
+  - Na pasta do NestJS (backend)  
+  `npm install`  
+  `npm install --save @nestjs/swagger`  
+  `npx prisma generate`  
+  `npm run build`  
+  `npm run start:dev`  
+  
+  - Na pasta do NextJS (Frontend):  
+  `npm install`  
+  `npm run dev`  
+
+### Caso queira mudar entre o docker e os serviços individuais rode o script `sh mudar-do-container-para-local-e-vice-versa.sh` que deve pedir a senha sudo para deletar as pastas 'dist' e 'node_modules' que ficam com permissões do Docker e vice versa, também remove os containers construídos antes de iniciar de forma diferente.  
+  
+  
 
 # 📘 Recursos Adicionados
 

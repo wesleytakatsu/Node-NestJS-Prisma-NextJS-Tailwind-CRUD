@@ -19,7 +19,7 @@ services:
     volumes:
       - ./nest-crud-gerenciador-de-tarefas:/app
       - /app/node_modules
-      - /app/dist
+      # - /app/dist
     environment:
       - NODE_ENV=development
 
